@@ -10,3 +10,5 @@ require (
 )
 
 require github.com/valyala/fastjson v1.6.4 // indirect
+
+replace github.com/vela-public/onekit v1.6.7 => github.com/vela-public/onekit v1.6.5
