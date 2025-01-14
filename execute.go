@@ -1,8 +1,10 @@
 package luatemplate
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/vela-public/onekit/luakit"
 	"io"
 	"text/template"
 
@@ -18,16 +20,33 @@ type LuaTemplate struct {
 	tmpl   *Template
 }
 
+func (lt *LuaTemplate) Index(L *lua.LState, key string) lua.LValue {
+	switch key {
+	case "param":
+		return lua.NewExport("lua.param.export", lua.WithIndex(ParamIndexL))
+	case "template":
+		return lua.NewFunction(NewTemplateL)
+
+	}
+	return lua.LNil
+}
+
 func (lt *LuaTemplate) Parse(source string) (*LuaTemplate, error) {
-	state := lua.NewState()
+	kit := luakit.Apply("vela", func(p lua.Preloader) {
+		p.SetGlobal("gee", lua.NewGeneric[*LuaTemplate](lt))
+	})
+
+	state := kit.NewState(context.Background(), func(opt *lua.Options) {
+		opt.RegistryMaxSize = 64
+		opt.CallStackSize = 64
+	})
 	defer state.Close()
 
-	state.SetGlobal("gee", GenLuaCodeL())
 	if err := state.DoString(source); err != nil {
 		return nil, err
 	}
 
-	tmpl, _ := state.A().(*Template)
+	tmpl, _ := state.Exdata.(*Template)
 	if tmpl == nil {
 		return nil, fmt.Errorf("state.A() must be of type *Template")
 	}
