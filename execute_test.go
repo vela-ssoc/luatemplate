@@ -6,7 +6,7 @@ import (
 )
 
 func TestExecute(t *testing.T) {
-	tpl, err := New().Parse(exampleTpl)
+	tpl, err := New("lua-template").Parse(exampleTpl)
 	if err != nil {
 		t.Fatal(err)
 	}

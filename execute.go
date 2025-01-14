@@ -3,19 +3,25 @@ package luatemplate
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"github.com/vela-public/onekit/luakit"
+	"errors"
 	"io"
 	"text/template"
 
 	"github.com/vela-public/onekit/lua"
+	"github.com/vela-public/onekit/luakit"
 )
 
-func New() *LuaTemplate {
-	return &LuaTemplate{}
+var ErrInvalidTemplate = errors.New("invalid lua template")
+
+// New like [text/template.New]
+func New(name string) *LuaTemplate {
+	return &LuaTemplate{
+		name: name,
+	}
 }
 
 type LuaTemplate struct {
+	name   string
 	source string
 	exdata *Template
 }
@@ -32,7 +38,6 @@ func (lt *LuaTemplate) NewTemplateL(L *lua.LState) int {
 	}
 	L.Push(lt.exdata)
 	return 1
-
 }
 
 func (lt *LuaTemplate) Index(L *lua.LState, key string) lua.LValue {
@@ -46,27 +51,27 @@ func (lt *LuaTemplate) Index(L *lua.LState, key string) lua.LValue {
 	return lua.LNil
 }
 
+// Parse like [text/template.Template] Parse.
 func (lt *LuaTemplate) Parse(source string) (*LuaTemplate, error) {
 	kit := luakit.Apply("vela", func(p lua.Preloader) {
-		p.SetGlobal("gee", lua.NewGeneric[*LuaTemplate](lt))
+		p.SetGlobal("gee", lua.NewGeneric(lt))
 	})
 
-	state := kit.NewState(context.Background(), func(opt *lua.Options) {
-		//todo
-	})
+	state := kit.NewState(context.Background())
 	defer state.Close()
 
 	if err := state.DoString(source); err != nil {
 		return nil, err
 	}
-	lt.source = source
 	if lt.exdata == nil {
-		return nil, fmt.Errorf("not found template")
+		return nil, ErrInvalidTemplate
 	}
+	lt.source = source
+
 	return lt, nil
 }
 
-// Execute Like [text/template.Template]
+// Execute like [text/template.Template] Execute.
 func (lt *LuaTemplate) Execute(w io.Writer, data any) error {
 	switch v := data.(type) {
 	case json.RawMessage:
@@ -77,7 +82,7 @@ func (lt *LuaTemplate) Execute(w io.Writer, data any) error {
 		data = param
 	}
 
-	tmpl, err := template.New("lua").
+	tmpl, err := template.New(lt.name).
 		Funcs(MyFuncMap).
 		Parse(lt.exdata.Text)
 	if err != nil {
@@ -92,5 +97,5 @@ func (lt *LuaTemplate) ParamJSON() json.RawMessage {
 		return bs
 	}
 
-	return json.RawMessage("null")
+	return nil
 }
