@@ -17,7 +17,22 @@ func New() *LuaTemplate {
 
 type LuaTemplate struct {
 	source string
-	tmpl   *Template
+	exdata *Template
+}
+
+func (lt *LuaTemplate) NewTemplateL(L *lua.LState) int {
+	lt.exdata = &Template{
+		Info: &Info{Version: "0.0.0", Author: "vela"},
+	}
+	tab := L.CheckTable(1)
+	err := luakit.TableTo(L, tab, lt.exdata)
+	if err != nil {
+		L.RaiseError("%v", err)
+		return 0
+	}
+	L.Push(lt.exdata)
+	return 1
+
 }
 
 func (lt *LuaTemplate) Index(L *lua.LState, key string) lua.LValue {
@@ -25,7 +40,7 @@ func (lt *LuaTemplate) Index(L *lua.LState, key string) lua.LValue {
 	case "param":
 		return lua.NewExport("lua.param.export", lua.WithIndex(ParamIndexL))
 	case "template":
-		return lua.NewFunction(NewTemplateL)
+		return lua.NewFunction(lt.NewTemplateL)
 
 	}
 	return lua.LNil
@@ -37,23 +52,17 @@ func (lt *LuaTemplate) Parse(source string) (*LuaTemplate, error) {
 	})
 
 	state := kit.NewState(context.Background(), func(opt *lua.Options) {
-		opt.RegistryMaxSize = 64
-		opt.CallStackSize = 64
+		//todo
 	})
 	defer state.Close()
 
 	if err := state.DoString(source); err != nil {
 		return nil, err
 	}
-
-	tmpl, _ := state.Exdata.(*Template)
-	if tmpl == nil {
-		return nil, fmt.Errorf("state.A() must be of type *Template")
-	}
-
 	lt.source = source
-	lt.tmpl = tmpl
-
+	if lt.exdata == nil {
+		return nil, fmt.Errorf("not found template")
+	}
 	return lt, nil
 }
 
@@ -70,7 +79,7 @@ func (lt *LuaTemplate) Execute(w io.Writer, data any) error {
 
 	tmpl, err := template.New("lua").
 		Funcs(MyFuncMap).
-		Parse(lt.tmpl.Text)
+		Parse(lt.exdata.Text)
 	if err != nil {
 		return err
 	}
@@ -79,7 +88,7 @@ func (lt *LuaTemplate) Execute(w io.Writer, data any) error {
 }
 
 func (lt *LuaTemplate) ParamJSON() json.RawMessage {
-	if bs, err := lt.tmpl.ParamJSON(false); err == nil {
+	if bs, err := lt.exdata.ParamJSON(false); err == nil {
 		return bs
 	}
 

@@ -12,10 +12,10 @@ import (
 )
 
 type Info struct {
-	File    string
-	Version string
-	Author  string
-	CTime   int64
+	File    string `lua:"file"`
+	Version string `lua:"version"`
+	Author  string `lua:"author"`
+	CTime   int64  `lua:"ctime"`
 }
 
 type Template struct {
