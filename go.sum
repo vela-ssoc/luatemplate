@@ -2,5 +2,5 @@ github.com/tidwall/pretty v1.2.1 h1:qjsOFOWWQl+N3RsoF5/ssm1pHmJJwhjlSbZ51I6wMl4=
 github.com/tidwall/pretty v1.2.1/go.mod h1:ITEVvHYasfjBbM0u2Pg8T2nJnzm8xPwvNhhsoaGGjNU=
 github.com/valyala/fastjson v1.6.4 h1:uAUNq9Z6ymTgGhcm0UynUAB6tlbakBrz6CQFax3BXVQ=
 github.com/valyala/fastjson v1.6.4/go.mod h1:CLCAqky6SMuOcxStkYQvblddUtoRxhYMGLrsQns1aXY=
-github.com/vela-public/onekit v1.6.7 h1:81SdulM/6P7431OAcmUJi/D0PQJ06rPuURREoX2sQBI=
-github.com/vela-public/onekit v1.6.7/go.mod h1:E5IZHDxCe9NaRzUo3Qe8EtPy0lmXtip8zkR6sKxiz1k=
+github.com/vela-public/onekit v1.6.8 h1:gYS0NqpcNH28SCJlG5jWwN+cfxTScVW6xzkq+gAQOb4=
+github.com/vela-public/onekit v1.6.8/go.mod h1:idfO3SlahC91b6tvIvQylpayzkLSsHqFKLQtOjLTlY0=

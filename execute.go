@@ -57,7 +57,7 @@ func (lt *LuaTemplate) Parse(source string) (*LuaTemplate, error) {
 		p.SetGlobal("gee", lua.NewGeneric(lt))
 	})
 
-	state := kit.NewState(context.Background())
+	state := kit.NewState(context.Background(), "lua-template")
 	defer state.Close()
 
 	if err := state.DoString(source); err != nil {
