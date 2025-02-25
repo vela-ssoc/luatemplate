@@ -151,7 +151,6 @@ func NewTemplateL(L *lua.LState) int {
 			t.Info.Author = val.String()
 		}
 	})
-	L.Exdata = t
 	L.Push(t)
 	return 1
 }

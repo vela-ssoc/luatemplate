@@ -4,3 +4,5 @@ github.com/valyala/fastjson v1.6.4 h1:uAUNq9Z6ymTgGhcm0UynUAB6tlbakBrz6CQFax3BXV
 github.com/valyala/fastjson v1.6.4/go.mod h1:CLCAqky6SMuOcxStkYQvblddUtoRxhYMGLrsQns1aXY=
 github.com/vela-public/onekit v1.6.8 h1:gYS0NqpcNH28SCJlG5jWwN+cfxTScVW6xzkq+gAQOb4=
 github.com/vela-public/onekit v1.6.8/go.mod h1:idfO3SlahC91b6tvIvQylpayzkLSsHqFKLQtOjLTlY0=
+github.com/vela-public/onekit v1.6.10 h1:7JcjA6/QG6VtnwMHBDw9qda76YtWG7hDA3OOc7rQZCk=
+github.com/vela-public/onekit v1.6.10/go.mod h1:idfO3SlahC91b6tvIvQylpayzkLSsHqFKLQtOjLTlY0=
