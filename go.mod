@@ -1,10 +1,10 @@
 module github.com/vela-ssoc/luatemplate
 
-go 1.24.1
+go 1.24.0
 
 require (
 	github.com/tidwall/pretty v1.2.1
-	github.com/vela-public/onekit v1.6.36
+	github.com/vela-public/onekit v1.6.67
 )
 
 require github.com/valyala/fastjson v1.6.4 // indirect

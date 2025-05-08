@@ -191,11 +191,34 @@ func (p *Param) DefaultLinesL(L *lua.LState) int {
 		return 1
 	}
 
-	data := lua.L2SS(L)
+	data := l2ss(L)
 
 	p.SetKV("default", data)
 	L.Push(p)
 	return 1
+}
+
+// l2ss copy from:
+// https://github.com/vela-public/onekit/blob/v1.6.36/lua/vela_toolkit.go#L331-L350
+func l2ss(L *lua.LState) []string {
+	n := L.GetTop()
+	if n == 0 {
+		return nil
+	}
+
+	var ssv []string
+	for i := 1; i <= n; i++ {
+		lv := L.Get(i)
+		if lv.Type() == lua.LTNil {
+			continue
+		}
+		v := lv.String()
+		if len(v) == 0 {
+			continue
+		}
+		ssv = append(ssv, v)
+	}
+	return ssv
 }
 
 func (p *Param) defaultL(L *lua.LState) int {
