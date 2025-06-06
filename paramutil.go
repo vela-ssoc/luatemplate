@@ -6,15 +6,19 @@ func V2I(val lua.LValue) (interface{}, bool) {
 	switch val.Type() {
 	case lua.LTInt:
 		return int(val.(lua.LInt)), true
+
 	case lua.LTNumber:
 		return float64(val.(lua.LNumber)), true
+
 	case lua.LTBool:
 		return bool(val.(lua.LBool)), true
+
 	case lua.LTString:
 		return val.String(), true
-	default:
-		return nil, false
+
 	}
+
+	return nil, false
 }
 
 func Tab2ParamTab(L *lua.LState, tab *lua.LTable) []*Param {

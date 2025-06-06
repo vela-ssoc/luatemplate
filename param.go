@@ -330,6 +330,24 @@ func (p *Param) condL(L *lua.LState) int {
 	return 1
 }
 
+func (p *Param) viewL(L *lua.LState) int {
+	cnd := L.IsString(1)
+	if len(cnd) > 0 {
+		p.Mask = SetKV(p.Mask, "view", cnd)
+	}
+	L.Push(p)
+	return 1
+}
+
+func (p *Param) PropertyBindL(L *lua.LState) int {
+	name := L.IsString(1)
+	if len(name) > 0 {
+		p.Mask = SetKV(p.Mask, "bind", name)
+	}
+	L.Push(p)
+	return 1
+}
+
 func (p *Param) labeLL(L *lua.LState) int {
 	label := L.IsString(1)
 	if len(label) > 0 {
@@ -452,6 +470,10 @@ func (p *Param) propertyL(L *lua.LState, key string) lua.LValue {
 		return lua.NewFunction(p.styleL)
 	case "cond":
 		return lua.NewFunction(p.condL)
+	case "view":
+		return lua.NewFunction(p.viewL)
+	case "bind":
+		return lua.NewFunction(p.PropertyBindL)
 	case "api":
 		return lua.NewFunction(p.apiL)
 	case "mode":
@@ -483,6 +505,8 @@ func (p *Param) Index(L *lua.LState, key string) lua.LValue {
 			return lua.NewFunction(p.descL)
 		case "cond":
 			return lua.NewFunction(p.condL)
+		case "view":
+			return lua.NewFunction(p.viewL)
 		}
 
 		return lua.LNil
@@ -503,6 +527,8 @@ func (p *Param) Index(L *lua.LState, key string) lua.LValue {
 		switch key {
 		case "default":
 			return lua.NewFunction(p.DefaultLinesL)
+		case "view":
+			return lua.NewFunction(p.viewL)
 		}
 		return p.propertyL(L, key)
 

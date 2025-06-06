@@ -12,10 +12,10 @@ import (
 )
 
 type Info struct {
-	File    string `lua:"file"`
-	Version string `lua:"version"`
-	Author  string `lua:"author"`
-	CTime   int64  `lua:"ctime"`
+	File    string
+	Version string
+	Author  string
+	CTime   int64
 }
 
 type Template struct {
@@ -141,6 +141,7 @@ func NewTemplateL(L *lua.LState) int {
 	t := &Template{
 		Info: &Info{Version: "0.0.0", Author: "vela"},
 	}
+	lua.SetExdata2(L, t)
 
 	tab := L.CheckTable(1)
 	tab.Range(func(key string, val lua.LValue) {
@@ -151,6 +152,7 @@ func NewTemplateL(L *lua.LState) int {
 			t.Info.Author = val.String()
 		}
 	})
+
 	L.Push(t)
 	return 1
 }
