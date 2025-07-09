@@ -1,12 +1,14 @@
-package luatemplate
+package luatemplate_test
 
 import (
 	"os"
 	"testing"
+
+	"github.com/vela-ssoc/luatemplate"
 )
 
 func TestExecute(t *testing.T) {
-	tpl, err := New("lua-template").Parse(exampleTpl)
+	tpl, err := luatemplate.New("lua-template").Parse(exampleTpl)
 	if err != nil {
 		t.Fatal(err)
 	}
