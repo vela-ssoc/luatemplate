@@ -11,7 +11,7 @@ import (
 	"github.com/vela-public/onekit/luakit"
 )
 
-var ErrInvalidTemplate = errors.New("invalid lua template")
+var ErrTemplate = errors.New("错误的 lua 模板")
 
 // New like [text/template.New]
 func New(name string) *LuaTemplate {
@@ -64,7 +64,7 @@ func (lt *LuaTemplate) Parse(source string) (*LuaTemplate, error) {
 		return nil, err
 	}
 	if lt.exdata == nil {
-		return nil, ErrInvalidTemplate
+		return nil, ErrTemplate
 	}
 	lt.source = source
 
@@ -82,7 +82,8 @@ func (lt *LuaTemplate) Execute(w io.Writer, data any) error {
 		data = param
 	}
 
-	tmpl, err := template.New(lt.name).
+	name := lt.name
+	tmpl, err := template.New(name).
 		Funcs(MyFuncMap).
 		Parse(lt.exdata.Text)
 	if err != nil {

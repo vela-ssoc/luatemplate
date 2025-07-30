@@ -3,9 +3,27 @@ package luatemplate_test
 import (
 	"os"
 	"testing"
+	"text/template"
 
 	"github.com/vela-ssoc/luatemplate"
 )
+
+func TestTemplate(t *testing.T) {
+	str := `
+agent.monitor{
+  errlog = "{{.monitor.errlog}}",
+  info   = "{{.monitor.info}}",
+  health = "{{.monitor.health}}",
+}
+`
+	tpl, err := template.New("lua").Parse(str)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = tpl.Execute(os.Stdout, nil); err != nil {
+		t.Error(err)
+	}
+}
 
 func TestExecute(t *testing.T) {
 	tpl, err := luatemplate.New("lua-template").Parse(exampleTpl)
